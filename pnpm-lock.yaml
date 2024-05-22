@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  json-to-zod:
+    specifier: ^1.1.2
+    version: 1.1.2
   surrealdb.js:
     specifier: 1.0.0-beta.8
     version: 1.0.0-beta.8
@@ -78,10 +81,23 @@ packages:
       ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     dev: false
 
+  /json-to-zod@1.1.2:
+    resolution: {integrity: sha512-6YDvnY8oOS5v1H1CWUvfNJkCI3SGbmCwWMytndPHzwyrr1K9ayNXL4rvOSf7WCy3c3Pxu2brvt4idZCkKh9gfQ==}
+    hasBin: true
+    dependencies:
+      prettier: 2.8.8
+    dev: false
+
   /node-gyp-build@4.8.1:
     resolution: {integrity: sha512-OSs33Z9yWr148JZcbZd5WiAXhh/n9z8TxQcdMhIOlpN9AhWpLfvVFO73+m77bBABQMaY9XSvIa+qk0jlI7Gcaw==}
     hasBin: true
     requiresBuild: true
+    dev: false
+
+  /prettier@2.8.8:
+    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
     dev: false
 
   /semver@7.6.2:

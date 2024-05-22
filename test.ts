@@ -1,10 +1,12 @@
 import { NSurreal } from "./mod";
 import { z } from "zod";
+import { schema_generate } from "./src/generateschema";
+import { type DB } from "./dbschema";
 
 require("dotenv").config();
 
 async function runtest() {
-  const client = new NSurreal();
+  const client = new NSurreal<DB>();
 
   const env = {
     SURREALDB_HOST: z.string().parse(process.env.SURREALDB_HOST),
@@ -30,7 +32,11 @@ async function runtest() {
     database: env.SURREALDB_DB,
   });
 
-  const res = await client.query(`select * from test;`);
+  await schema_generate({ db: client, fileout: "dbschema.ts" });
+
+  const test = await client.query("SELECT * FROM user;");
+
+  process.exit(0);
 }
 
 runtest();
