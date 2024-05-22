@@ -1,0 +1,13 @@
+{
+  "name": "@netron/surreal",
+  "version": "0.1.2",
+  "description": "type safe surrealdb",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish": "npx jsr publish"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
