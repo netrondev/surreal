@@ -48,7 +48,7 @@ export class NSurreal<G extends Database<any> = {}> {
   /** Runs a set of SurrealQL statements against the database.
    * See https://surrealdb.com/docs/surrealdb/integration/sdks/javascript#query
    */
-  async query<Q extends string>(query: Q): Promise<Query<Q, G>> {
+  async query<Q extends string>(query: Q): Promise<[Query<Q, G>]> {
     if (!this.client) throw new Error("Client not connected");
 
     const stack = new Error();
@@ -77,6 +77,6 @@ export class NSurreal<G extends Database<any> = {}> {
 
     const result = await this.client.query(query);
 
-    return result as Query<Q, G>;
+    return result as [Query<Q, G>];
   }
 }
