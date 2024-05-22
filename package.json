@@ -1,6 +1,6 @@
 {
   "name": "@netron/surreal",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "type safe surrealdb",
   "main": "index.js",
   "scripts": {

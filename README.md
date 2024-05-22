@@ -1,6 +1,6 @@
 # Early dev release
 
-The plan is to provide a way to use surrealdb with type safety automatically.
+The plan is to provide a way to use SurrealDB ( https://surrealdb.com/ ) with type safety automatically.
 
 https://jsr.io/@netron/surreal
 
