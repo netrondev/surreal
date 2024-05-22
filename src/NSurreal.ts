@@ -38,7 +38,7 @@ export class NSurreal<G extends Database<any> = {}> {
     return;
   }
 
-  async query<Q extends string>(query: Q) {
+  async query<Q extends string>(query: Q): Promise<Query<Q, G>> {
     if (!this.client) throw new Error("Client not connected");
 
     const stack = new Error();
