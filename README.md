@@ -1,5 +1,7 @@
 # DO NOT USE YET! UNDER DEVELOPMENT
 
+https://jsr.io/@netron/surreal
+
 # @netron/surreal
 
 The plan is to provide a way to use surrealdb with type safety automatically.
@@ -17,6 +19,6 @@ client.connect();
 client.use();
 
 // result should be typed automagically no matter the complexity of the query.
-const result = await client.query("select * from yourtable");
+const result = await client.query("select * from yourtable;");
 
 ```
