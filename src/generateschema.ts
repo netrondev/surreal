@@ -1,4 +1,3 @@
-import Surreal from "surrealdb.js";
 import { NSurreal } from "./NSurreal";
 import {
   SR_derive_fields_from_table,
@@ -6,6 +5,7 @@ import {
 } from "./surreal_helpers";
 import jsonToZod from "json-to-zod";
 import fs from "fs";
+
 export async function schema_generate(inputs: {
   db: NSurreal<any>;
   /** example: src/dbschema.ts */

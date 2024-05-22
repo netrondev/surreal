@@ -50,8 +50,6 @@ export async function SR_getInfoForDB({ db }: { db: NSurreal }) {
 
   // console.log(result[0]?.result);
 
-  console.log(result);
-
   const parsed = z
     .object({
       analyzers: z.record(z.string(), z.string()),
@@ -81,8 +79,6 @@ export async function SR_getInfoForTABLE({
   });
 
   if (!result) throw new Error(`could not get info for tb ${table};`);
-
-  console.log(result[0]);
 
   const parsed = z
     .object({

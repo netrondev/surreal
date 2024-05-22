@@ -3,6 +3,7 @@ import { generate_unique_hash_repeatably } from "./hash";
 import { Query } from "./typeparser/Query";
 import { Database } from "./typeparser/Schema";
 
+/** Typed Surreal wrapper with auto connection reconnect */
 export class NSurreal<G extends Database<any> = {}> {
   client: Surreal;
   timer: NodeJS.Timeout;
@@ -47,17 +48,24 @@ export class NSurreal<G extends Database<any> = {}> {
       throw new Error("Could not generate unique identifier for query.");
     }
 
-    const unique_identifier_location = await generate_unique_hash_repeatably(
-      stack.stack
-    );
-    const unique_identifier_query = await generate_unique_hash_repeatably(
-      query
-    );
+    // ================================================================================
+    // Future Experiment.
+    // Use stack trace to generate unique identifier for query.
+    // Then we can possibly generate types for more complex queries automatically when they run.
+
+    // const unique_identifier_location = await generate_unique_hash_repeatably(
+    //   stack.stack
+    // );
+    // const unique_identifier_query = await generate_unique_hash_repeatably(
+    //   query
+    // );
+
     // console.log("--------------------");
     // console.log(unique_identifier_location);
     // console.log(unique_identifier_query);
     // console.log(query);
-    // console.log("--------------------");
+    // ================================================================================");
+
     const result = await this.client.query(query);
 
     return result as Query<Q, G>;
