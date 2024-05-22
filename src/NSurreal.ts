@@ -3,7 +3,8 @@ import { generate_unique_hash_repeatably } from "./hash";
 import { Query } from "./typeparser/Query";
 import { Database } from "./typeparser/Schema";
 
-/** Typed Surreal wrapper with auto connection reconnect */
+/** TypeSafe SurrealDB Client https://jsr.io/@netron/surreal based on surrealdb.js
+ * See https://surrealdb.com/docs/surrealdb/integration/sdks/javascript */
 export class NSurreal<G extends Database<any> = {}> {
   client: Surreal;
   timer: NodeJS.Timeout;
@@ -25,6 +26,9 @@ export class NSurreal<G extends Database<any> = {}> {
     }, 10000);
   }
 
+  /** Connects to a local or remote database endpoint.
+   * https://surrealdb.com/docs/surrealdb/integration/sdks/javascript#connect
+   */
   async connect(url: string, opts?: ConnectionOptions): Promise<void> {
     if (!this.client) throw new Error("Client not connected");
     this.opts = opts;
@@ -33,12 +37,17 @@ export class NSurreal<G extends Database<any> = {}> {
     this.timestamp_connected = new Date();
   }
 
+  /** Switch to a specific namespace and database. If only the ns or db property is specified,
+   * the current connection details will be used to fill the other property. */
   async use(opts: { namespace: string; database: string }): Promise<void> {
     if (!this.client) throw new Error("Client not connected");
     await this.client.use(opts);
     return;
   }
 
+  /** Runs a set of SurrealQL statements against the database.
+   * See https://surrealdb.com/docs/surrealdb/integration/sdks/javascript#query
+   */
   async query<Q extends string>(query: Q): Promise<Query<Q, G>> {
     if (!this.client) throw new Error("Client not connected");
 

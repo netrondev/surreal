@@ -22,7 +22,7 @@ Add .env and dont forget to add .env to .gitignore file
 `pnpm add dotenv`
 
 ```ts
-import NSurreal from "./mod";
+import { NSurreal } from "./mod";
 import { z } from "zod";
 
 

@@ -1,3 +1,1 @@
-import { NSurreal } from "./src/NSurreal";
-
-export default NSurreal;
+export { NSurreal } from "./src/NSurreal";
