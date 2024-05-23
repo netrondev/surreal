@@ -15,7 +15,13 @@ export class NSurreal<G extends Record<string, object> = {}> {
   url: string | undefined;
   opts: ConnectionOptions | undefined;
 
-  constructor() {
+  output_path: string = "./src/generated";
+
+  constructor(options?: { output_path: string }) {
+    if (options?.output_path) {
+      this.output_path = options.output_path;
+    }
+
     this.client = new Surreal();
     this.timer = setInterval(() => {
       if (!this.timestamp_connected) return;
@@ -46,6 +52,15 @@ export class NSurreal<G extends Record<string, object> = {}> {
     if (!this.client) throw new Error("Client not connected");
     await this.client.use(opts);
     return;
+  }
+
+  /** lists the known schema types for queries. */
+  async read_querytypes() {
+    return new Promise<string[]>((resolve) => {
+      fs.readdir(`${this.output_path}/querytypes`, (err, files) => {
+        resolve(files.filter((i) => i.endsWith(".ts")));
+      });
+    });
   }
 
   /** Runs a set of SurrealQL statements against the database.
@@ -94,15 +109,17 @@ export class NSurreal<G extends Record<string, object> = {}> {
       const uid = uniqueID as string;
       const query_response_type = jsonToZod(result, uid);
 
+      await fs.promises.mkdir(this.output_path, { recursive: true });
+
       await fs.promises.writeFile(
-        `./src/generated/querytypes/${uid}.ts`,
+        `${this.output_path}/querytypes/${uid}.ts`,
         `import { z } from "zod";\nexport ${query_response_type}\nexport type T${uid} = z.infer<typeof ${uid}>`
       );
 
       let schemas = await read_querytypes();
 
       await fs.promises.writeFile(
-        `./src/generated/combined.ts`,
+        `${this.output_path}/combined.ts`,
         `import { z } from "zod";\n
 ${schemas
   .map((i) => {
