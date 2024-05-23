@@ -1,5 +1,5 @@
 {
   "name": "@netron/surreal",
-  "version": "0.1.12",
-  "exports": "./mod.ts"
+  "version": "0.1.13",
+  "exports": "./index.ts"
 }

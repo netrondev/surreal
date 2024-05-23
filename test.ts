@@ -1,4 +1,4 @@
-import { NSurreal } from "./mod";
+import { NSurreal } from "./index";
 import { z } from "zod";
 import { schema_generate } from "./src/generateschema";
 

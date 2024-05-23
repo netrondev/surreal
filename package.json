@@ -1,8 +1,8 @@
 {
   "name": "@netron/surreal",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "type safe surrealdb",
-  "main": "mod.js",
+  "main": "index.ts",
   "scripts": {
     "test": "npx tsx test.ts",
     "publish": "npx jsr publish"
