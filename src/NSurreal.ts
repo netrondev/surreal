@@ -4,7 +4,6 @@ import { Query } from "./typeparser/Query";
 import { Database } from "./typeparser/Schema";
 import jsonToZod from "json-to-zod";
 import fs from "fs";
-import { read_querytypes } from "./generateschema";
 
 /** TypeSafe SurrealDB Client https://jsr.io/@netron/surreal based on surrealdb.js
  * See https://surrealdb.com/docs/surrealdb/integration/sdks/javascript */
@@ -55,7 +54,7 @@ export class NSurreal<G extends Record<string, object> = {}> {
   }
 
   /** lists the known schema types for queries. */
-  async read_querytypes() {
+  async read_querytypes(): Promise<string[]> {
     return new Promise<string[]>((resolve) => {
       fs.readdir(`${this.output_path}/querytypes`, (err, files) => {
         resolve(files.filter((i) => i.endsWith(".ts")));
@@ -116,7 +115,7 @@ export class NSurreal<G extends Record<string, object> = {}> {
         `import { z } from "zod";\nexport ${query_response_type}\nexport type T${uid} = z.infer<typeof ${uid}>`
       );
 
-      let schemas = await read_querytypes();
+      let schemas = await this.read_querytypes();
 
       await fs.promises.writeFile(
         `${this.output_path}/combined.ts`,
