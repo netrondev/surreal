@@ -32,11 +32,6 @@ async function runtest() {
     },
   });
 
-  await client.use({
-    namespace: env.SURREALDB_NS,
-    database: env.SURREALDB_DB,
-  });
-
   await schema_generate({ db: client, fileout: "dbschema.ts" });
   // test should be typed now.
 
