@@ -19,28 +19,20 @@ SURREALDB_DB="test"
 
 Add .env and dont forget to add .env to .gitignore file
 
-`pnpm add dotenv`
+`pnpm add dotenv zod`
 
 ```ts
-import { NSurreal } from "./mod";
+import { NSurreal } from "@netron/surreal";
 import { z } from "zod";
 
-
-import { schema_generate } from "./src/generateschema";
-
-// once generated import
-import { type DB } from "./dbschema";
-
-// or use manually like this:
-export type DB = {};
-
+// Once generated switch to this.
+import { Queries } from "./src/generated/combined";
 require("dotenv").config();
 
-async function runtest() {
+// before generated use this blank type. Remove after first run.
+type Queries = {}
 
-  // pass in DB type:
-  const client = new NSurreal<DB>();
-
+async function test() {
   const env = {
     SURREALDB_HOST: z.string().parse(process.env.SURREALDB_HOST),
     SURREALDB_NS: z.string().parse(process.env.SURREALDB_NS),
@@ -48,6 +40,8 @@ async function runtest() {
     SURREALDB_USER: z.string().parse(process.env.SURREALDB_USER),
     SURREALDB_PASS: z.string().parse(process.env.SURREALDB_PASS),
   };
+
+  const client = new NSurreal<Queries>();
 
   await client.connect(`${process.env.SURREALDB_HOST}/rpc`, {
     namespace: env.SURREALDB_NS,
@@ -65,12 +59,10 @@ async function runtest() {
     database: env.SURREALDB_DB,
   });
 
-  // Generate schema type file
-  await schema_generate({ db: client, fileout: "dbschema.ts" });
-
-  // Should be typed now!
-  const test = await client.query("SELECT * FROM yourtable;");
-
+  const test = await client.query("select * from user;", "selectusers");
+  // test now has automatic types!
 }
+
+test();
 
 ```
