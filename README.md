@@ -1,9 +1,10 @@
-![example](https://github.com/netrondev/surreal/blob/main/example.gif?raw=true)
-
 The plan is to provide a way to use SurrealDB ( https://surrealdb.com/ ) with type safety automatically.
 
 https://jsr.io/@netron/surreal
 
+<video autoplay loop>
+  <source src="https://github.com/netrondev/surreal/blob/main/example.mp4?raw=true" type="video/mp4" />
+</video>
 
 # Usage
 
