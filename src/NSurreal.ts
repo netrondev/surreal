@@ -108,7 +108,9 @@ export class NSurreal<G extends Record<string, object> = {}> {
       const uid = uniqueID as string;
       const query_response_type = jsonToZod(result, uid);
 
-      await fs.promises.mkdir(this.output_path, { recursive: true });
+      await fs.promises.mkdir(`${this.output_path}/querytypes`, {
+        recursive: true,
+      });
 
       await fs.promises.writeFile(
         `${this.output_path}/querytypes/${uid}.ts`,
