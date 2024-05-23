@@ -71,3 +71,9 @@ async function test() {
 test();
 
 ```
+
+Works well when you do run on save. Also good to have the db locally so requests are nice and snappy.
+
+```
+npx tsx --watch test.ts
+```
