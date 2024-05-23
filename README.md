@@ -1,7 +1,11 @@
-[Imgur](https://imgur.com/yjNUktS)
+[Screencast from 2024-05-23 19-45-05.webm](https://github.com/netrondev/surreal/assets/3116694/9ba78312-93fc-4eb3-8a6d-acef96dd9926)
 
 The plan is to provide a way to use SurrealDB ( https://surrealdb.com/ ) with type safety automatically.
 
+Github: 
+https://github.com/netrondev/surreal
+
+JSR:
 https://jsr.io/@netron/surreal
 
 
