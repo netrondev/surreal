@@ -1,4 +1,4 @@
-![example](https://github.com/netrondev/surreal/blob/main/example.png?raw=true)
+![example](https://github.com/netrondev/surreal/blob/main/example.gif?raw=true)
 
 The plan is to provide a way to use SurrealDB ( https://surrealdb.com/ ) with type safety automatically.
 
