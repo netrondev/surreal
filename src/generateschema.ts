@@ -6,6 +6,14 @@ import {
 import jsonToZod from "json-to-zod";
 import fs from "fs";
 
+export async function read_querytypes() {
+  return new Promise<string[]>((resolve) => {
+    fs.readdir("./src/generated/querytypes", (err, files) => {
+      resolve(files.filter((i) => i.endsWith(".ts")));
+    });
+  });
+}
+
 export async function schema_generate(inputs: {
   db: NSurreal<any>;
   /** example: src/dbschema.ts */

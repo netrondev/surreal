@@ -1,10 +1,10 @@
 {
   "name": "@netron/surreal",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "type safe surrealdb",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx tsx test.ts",
     "publish": "npx jsr publish"
   },
   "keywords": [],
@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "surrealdb.wasm": "1.0.0-beta.11"
   }
 }

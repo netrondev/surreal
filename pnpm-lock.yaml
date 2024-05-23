@@ -22,23 +22,23 @@ devDependencies:
   dotenv:
     specifier: ^16.4.5
     version: 16.4.5
+  surrealdb.wasm:
+    specifier: 1.0.0-beta.11
+    version: 1.0.0-beta.11(surrealdb.js@1.0.0-beta.8)
 
 packages:
 
   /@deno/shim-deno-test@0.4.0:
     resolution: {integrity: sha512-oYWcD7CpERZy/TXMTM9Tgh1HD/POHlbY9WpzmAk+5H8DohcxG415Qws8yLGlim3EaKBT2v3lJv01x4G0BosnaQ==}
-    dev: false
 
   /@deno/shim-deno@0.16.1:
     resolution: {integrity: sha512-s9v0kzF5bm/o9TgdwvsraHx6QNllYrXXmKzgOG2lh4LFXnVMr2gpjK/c/ve6EflQn1MqImcWmVD8HAv5ahuuZQ==}
     dependencies:
       '@deno/shim-deno-test': 0.4.0
       which: 2.0.2
-    dev: false
 
   /@icholy/duration@5.1.0:
     resolution: {integrity: sha512-I/zdjC6qYdwWJ2H1/PZbI3g58pPIiI/eOe5XDTtQ/v36d0ogcvAylqwOIWj/teY1rBnIMzUyWfX7PMm9I67WWg==}
-    dev: false
 
   /@types/node@20.12.12:
     resolution: {integrity: sha512-eWLDGF/FOSPtAvEqeRAQ4C8LSA7M1I7i0ky1I8U7kD1J5ITyW3AsRhQrKVoWf5pFKZ2kILsEGJhsI9r93PYnOw==}
@@ -52,17 +52,14 @@ packages:
     requiresBuild: true
     dependencies:
       node-gyp-build: 4.8.1
-    dev: false
 
   /cbor-redux@1.0.0:
     resolution: {integrity: sha512-nqCD/Yu2FON0XgZYdUNsMx1Tc08MOY3noh9bO2MvkjlyLZyqIVWjuz6A0mDrPJncdOfacokFUtF7zlzzP5oK5A==}
     dependencies:
       '@deno/shim-deno': 0.16.1
-    dev: false
 
   /decimal.js@10.4.3:
     resolution: {integrity: sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==}
-    dev: false
 
   /dotenv@16.4.5:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
@@ -71,7 +68,6 @@ packages:
 
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
-    dev: false
 
   /isows@1.0.4(ws@8.17.0):
     resolution: {integrity: sha512-hEzjY+x9u9hPmBom9IIAqdJCwNLax+xrPb51vEPpERoFlIxgmZcHzsT5jKG06nvInKOBGvReAVz80Umed5CczQ==}
@@ -79,7 +75,6 @@ packages:
       ws: '*'
     dependencies:
       ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
-    dev: false
 
   /json-to-zod@1.1.2:
     resolution: {integrity: sha512-6YDvnY8oOS5v1H1CWUvfNJkCI3SGbmCwWMytndPHzwyrr1K9ayNXL4rvOSf7WCy3c3Pxu2brvt4idZCkKh9gfQ==}
@@ -92,7 +87,6 @@ packages:
     resolution: {integrity: sha512-OSs33Z9yWr148JZcbZd5WiAXhh/n9z8TxQcdMhIOlpN9AhWpLfvVFO73+m77bBABQMaY9XSvIa+qk0jlI7Gcaw==}
     hasBin: true
     requiresBuild: true
-    dev: false
 
   /prettier@2.8.8:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
@@ -104,7 +98,6 @@ packages:
     resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
     engines: {node: '>=10'}
     hasBin: true
-    dev: false
 
   /surrealdb.js@1.0.0-beta.8:
     resolution: {integrity: sha512-waIeNBbTrS+dmW1WO50CCjcWkHw6L99MJDM1LrS1nxg6paYui7Kd0IM+emIjFmyjQc51rASZDTmj4mwyQTtfGA==}
@@ -121,7 +114,15 @@ packages:
     optionalDependencies:
       bufferutil: 4.0.8
       utf-8-validate: 6.0.4
-    dev: false
+
+  /surrealdb.wasm@1.0.0-beta.11(surrealdb.js@1.0.0-beta.8):
+    resolution: {integrity: sha512-Rz9S99ECYJ5VA9nhfAqmDb0BmrNtGmTsPthJD8ILTFB0mO5fUrI+tX9PO11Zq/iSWdIoFyFq2+25UJZzmJMyjQ==}
+    peerDependencies:
+      surrealdb.js: ^1.0.0-beta.7
+    dependencies:
+      surrealdb.js: 1.0.0-beta.8
+      zod: 3.23.8
+    dev: true
 
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
@@ -133,12 +134,10 @@ packages:
     requiresBuild: true
     dependencies:
       node-gyp-build: 4.8.1
-    dev: false
 
   /uuidv7@0.6.3:
     resolution: {integrity: sha512-zV3eW2NlXTsun/aJ7AixxZjH/byQcH/r3J99MI0dDEkU2cJIBJxhEWUHDTpOaLPRNhebPZoeHuykYREkI9HafA==}
     hasBin: true
-    dev: false
 
   /which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
@@ -146,7 +145,6 @@ packages:
     hasBin: true
     dependencies:
       isexe: 2.0.0
-    dev: false
 
   /ws@8.17.0(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     resolution: {integrity: sha512-uJq6108EgZMAl20KagGkzCKfMEjxmKvZHG7Tlq0Z6nOky7YF7aq4mOx6xK8TJ/i1LeK4Qus7INktacctDgY8Ow==}
@@ -162,8 +160,6 @@ packages:
     dependencies:
       bufferutil: 4.0.8
       utf-8-validate: 6.0.4
-    dev: false
 
   /zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
-    dev: false

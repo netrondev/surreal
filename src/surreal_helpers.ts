@@ -2,12 +2,10 @@ import { type Surreal } from "surrealdb.js";
 import { z } from "zod";
 import { NSurreal } from "./NSurreal";
 
-export async function SR_getInfoForKV({ db }: { db: NSurreal }) {
+export async function SR_getInfoForKV({ db }: { db: NSurreal<any> }) {
   const result = await db.query("INFO FOR KV;").catch((err) => {
     console.log(err);
   });
-
-  if (!result) throw new Error("could not get KV;");
 
   //   console.log(result[0]);
 
@@ -22,12 +20,10 @@ export async function SR_getInfoForKV({ db }: { db: NSurreal }) {
   return parsed;
 }
 
-export async function SR_getInfoForNS({ db }: { db: NSurreal }) {
+export async function SR_getInfoForNS({ db }: { db: NSurreal<any> }) {
   const result = await db.query("INFO FOR NS;").catch((err) => {
     console.log(err);
   });
-
-  if (!result) throw new Error("could not get NS;");
 
   const parsed = z
     .object({
@@ -41,8 +37,8 @@ export async function SR_getInfoForNS({ db }: { db: NSurreal }) {
   return parsed;
 }
 
-export async function SR_getInfoForDB({ db }: { db: NSurreal }) {
-  const result = await db.query("INFO FOR DB;").catch((err) => {
+export async function SR_getInfoForDB({ db }: { db: NSurreal<any> }) {
+  const result = await db.query("INFO FOR DB;", "info_for_db").catch((err) => {
     console.log(err);
   });
 
@@ -98,7 +94,7 @@ export async function SR_derive_fields_from_table({
   db,
   table,
 }: {
-  db: NSurreal;
+  db: NSurreal<any>;
   table: string;
 }) {
   const result = await db
@@ -111,7 +107,7 @@ export async function SR_derive_fields_from_table({
 
   // console.log(result[0]?.result);
 
-  return result[0];
+  return result[0]!;
 }
 
 export async function SR_info({ db }: { db: NSurreal }) {

@@ -4,6 +4,9 @@ import { schema_generate } from "./src/generateschema";
 
 // once generated, you can import the schema like this:
 import { type DB } from "./dbschema";
+import Surreal from "surrealdb.js";
+import { surrealdbWasmEngines } from "surrealdb.wasm/lib/embedded";
+import { SR_info } from "./src/surreal_helpers";
 
 require("dotenv").config();
 
@@ -35,9 +38,7 @@ async function runtest() {
   });
 
   await schema_generate({ db: client, fileout: "dbschema.ts" });
-
   // test should be typed now.
-  const test = await client.query("SELECT * FROM yourtable;");
 
   process.exit(0);
 }
