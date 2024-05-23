@@ -1,5 +1,4 @@
-
-[NSurreal Screencast.webm](https://github.com/netrondev/surreal/assets/3116694/9376eb7e-c7a5-48f6-971e-d8011a518259)
+![NSurreal_Screencast](https://github.com/netrondev/surreal/assets/3116694/c91df4de-2943-454e-9423-546c80fcb5f4)
 
 The plan is to provide a way to use SurrealDB ( https://surrealdb.com/ ) with type safety automatically.
 
