@@ -1,7 +1,5 @@
 import { ConnectionOptions, Surreal } from "surrealdb.js";
 import { generate_unique_hash_repeatably } from "./hash";
-import { Query } from "./typeparser/Query";
-import { Database } from "./typeparser/Schema";
 import jsonToZod from "json-to-zod";
 import fs from "fs";
 

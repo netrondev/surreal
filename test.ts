@@ -3,7 +3,7 @@ import { z } from "zod";
 import { schema_generate } from "./src/generateschema";
 
 // once generated, you can import the schema like this:
-import { type DB } from "./dbschema";
+import { type Queries } from "./src/generated/combined";
 import Surreal from "surrealdb.js";
 import { surrealdbWasmEngines } from "surrealdb.wasm/lib/embedded";
 import { SR_info } from "./src/surreal_helpers";
@@ -11,7 +11,7 @@ import { SR_info } from "./src/surreal_helpers";
 require("dotenv").config();
 
 async function runtest() {
-  const client = new NSurreal<DB>();
+  const client = new NSurreal<Queries>();
 
   const env = {
     SURREALDB_HOST: z.string().parse(process.env.SURREALDB_HOST),
@@ -32,8 +32,10 @@ async function runtest() {
     },
   });
 
-  await schema_generate({ db: client, fileout: "dbschema.ts" });
+  // await schema_generate({ db: client, fileout: "dbschema.ts" });
   // test should be typed now.
+
+  const res = await client.query("select * from users;", "selectusers");
 
   process.exit(0);
 }
