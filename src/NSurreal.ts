@@ -2,6 +2,7 @@ import { ConnectionOptions, Surreal } from "surrealdb.js";
 import { generate_unique_hash_repeatably } from "./hash";
 import jsonToZod from "json-to-zod";
 import fs from "fs";
+import JsonToTS from "./jsontots";
 
 /** TypeSafe SurrealDB Client https://jsr.io/@netron/surreal based on surrealdb.js
  * See https://surrealdb.com/docs/surrealdb/integration/sdks/javascript */
@@ -70,10 +71,22 @@ export class NSurreal<G extends Record<string, object> = {}> {
     /** we create a unique tag for this query to link the output back to the type */
     uniqueID?: Q
   ): Promise<G[Q]> {
+    query = query.trim();
     if (!this.client) throw new Error("Client not connected");
 
     if (!uniqueID) {
       throw new Error("uniqueID is required for query.");
+    }
+
+    const uid = uniqueID as string;
+
+    // ensure uniqueId starts with capital.
+    if (uid[0] != uid[0].toUpperCase()) {
+      throw new Error("uniqueID must start with a capital letter.");
+    }
+
+    if (!/^[A-Z][A-Za-z0-9_]*$/.test(uid)) {
+      throw new Error("uniqueID must be a valid identifier.");
     }
 
     const stack = new Error();
@@ -82,37 +95,52 @@ export class NSurreal<G extends Record<string, object> = {}> {
       throw new Error("Could not generate unique identifier for query.");
     }
 
-    // ================================================================================
-    // Future Experiment.
-    // Use stack trace to generate unique identifier for query.
-    // Then we can possibly generate types for more complex queries automatically when they run.
-
-    const unique_identifier_location = await generate_unique_hash_repeatably(
-      stack.stack
-    );
-    const unique_identifier_query = await generate_unique_hash_repeatably(
-      query
-    );
-
-    // console.log("--------------------");
-    // console.log(unique_identifier_location);
-    // console.log(unique_identifier_query);
-    // console.log(query);
-    // ================================================================================");
-
     const result = await this.client.query(query);
 
     if (uniqueID) {
       const uid = uniqueID as string;
-      const query_response_type = jsonToZod(result, uid);
+
+      let querycount = query.split(";").length;
+      if (query.endsWith(";")) {
+        querycount -= 1;
+      }
+
+      let responseobj: Record<string, (typeof result)[number]> = {};
+
+      result.forEach((i, idx) => {
+        responseobj[`${uid}_query${idx + 1}`] = i;
+      });
+
+      const ts = JsonToTS(responseobj, { useTypeAlias: true, rootName: uid });
 
       await fs.promises.mkdir(`${this.output_path}/querytypes`, {
         recursive: true,
       });
 
+      let outputtype = ts.map((i, idx) => {
+        if (idx == 0) {
+          let output = i.split("\n").at(0)?.replace("{", "[");
+          output += "\n";
+          // change object to tuple..
+          output += i
+            .split("\n")
+            .slice(1, -1)
+            .map((x) => x.split(":")[1].slice(0, -1))
+            .join(",\n");
+
+          output += "\n";
+          output += i.split("\n").at(-1)!.replace("}", "]");
+
+          return output;
+        }
+
+        return i;
+      });
+
       await fs.promises.writeFile(
         `${this.output_path}/querytypes/${uid}.ts`,
-        `import { z } from "zod";\nexport ${query_response_type}\nexport type T${uid} = z.infer<typeof ${uid}>`
+        `import { RecordId } from "surrealdb.js";
+export ${outputtype.join("\n")}`
       );
 
       let schemas = await this.read_querytypes();
@@ -122,7 +150,7 @@ export class NSurreal<G extends Record<string, object> = {}> {
         `import { z } from "zod";\n
 ${schemas
   .map((i) => {
-    return `import { T${i.replace(".ts", "")} } from "./querytypes/${i.replace(
+    return `import { ${i.replace(".ts", "")} } from "./querytypes/${i.replace(
       ".ts",
       ""
     )}";`;
@@ -130,7 +158,7 @@ ${schemas
   .join("\n")}
       
 export type Queries = {\n${schemas
-          .map((i) => `  "${i.replace(".ts", "")}": T${i.replace(".ts", "")}`)
+          .map((i) => `  "${i.replace(".ts", "")}": ${i.replace(".ts", "")}`)
           .join("\n")}\n}`
       );
     }

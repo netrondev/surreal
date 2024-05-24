@@ -4,7 +4,7 @@ import { schema_generate } from "./src/generateschema";
 
 // once generated, you can import the schema like this:
 import { type Queries } from "./src/generated/combined";
-import Surreal from "surrealdb.js";
+import Surreal, { RecordId } from "surrealdb.js";
 import { surrealdbWasmEngines } from "surrealdb.wasm/lib/embedded";
 import { SR_info } from "./src/surreal_helpers";
 
@@ -35,7 +35,15 @@ async function runtest() {
   // await schema_generate({ db: client, fileout: "dbschema.ts" });
   // test should be typed now.
 
-  const res = await client.query("select * from users;", "selectusers");
+  const res = await client.query(
+    "select *, (select * from vehicle) as vehicles from user; select * from vehicle; info for db;",
+    "ASDF"
+  );
+
+  const resasd = await client.query(
+    "info for db; select * from vehicle; select * from user;",
+    "ANOTHER"
+  );
 
   process.exit(0);
 }
