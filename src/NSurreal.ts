@@ -12,12 +12,17 @@ export class NSurreal<G extends Record<string, object> = {}> {
   timestamp_connected: Date | undefined;
   url: string | undefined;
   opts: ConnectionOptions | undefined;
-
   output_path: string = "./src/generated";
 
-  constructor(options?: { output_path: string }) {
+  debug = false;
+
+  constructor(options?: { output_path: string; debug?: boolean }) {
     if (options?.output_path) {
       this.output_path = options.output_path;
+    }
+
+    if (options?.debug) {
+      this.debug = options.debug;
     }
 
     this.client = new Surreal();
@@ -36,11 +41,21 @@ export class NSurreal<G extends Record<string, object> = {}> {
   /** Connects to a local or remote database endpoint.
    * https://surrealdb.com/docs/surrealdb/integration/sdks/javascript#connect
    */
+
+  log(...input: any[]) {
+    if (this.debug) console.log(`NSurreal -`, input);
+  }
+
   async connect(url: string, opts?: ConnectionOptions): Promise<void> {
-    if (!this.client) throw new Error("Client not connected");
+    this.log(`Connecting to ${url}`);
+    if (!this.client) {
+      this.log(`Client not connected`);
+      throw new Error("Client not connected");
+    }
     this.opts = opts;
     this.url = url;
     await this.client.connect(url, opts);
+    this.log("Connected!");
     this.timestamp_connected = new Date();
   }
 
@@ -69,8 +84,9 @@ export class NSurreal<G extends Record<string, object> = {}> {
   async query<Q extends keyof G>(
     query: string,
     /** we create a unique tag for this query to link the output back to the type */
-    uniqueID?: Q
+    uniqueID: Q
   ): Promise<G[Q]> {
+    this.log("Querying", query, uniqueID);
     query = query.trim();
     if (!this.client) throw new Error("Client not connected");
 

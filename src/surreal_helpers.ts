@@ -3,7 +3,7 @@ import { z } from "zod";
 import { NSurreal } from "./NSurreal";
 
 export async function SR_getInfoForKV({ db }: { db: NSurreal<any> }) {
-  const result = await db.query("INFO FOR KV;").catch((err) => {
+  const result = await db.query("INFO FOR KV;", "info for kv").catch((err) => {
     console.log(err);
   });
 
@@ -21,7 +21,7 @@ export async function SR_getInfoForKV({ db }: { db: NSurreal<any> }) {
 }
 
 export async function SR_getInfoForNS({ db }: { db: NSurreal<any> }) {
-  const result = await db.query("INFO FOR NS;").catch((err) => {
+  const result = await db.query("INFO FOR NS;", "info for ns").catch((err) => {
     console.log(err);
   });
 
@@ -98,7 +98,7 @@ export async function SR_derive_fields_from_table({
   table: string;
 }) {
   const result = await db
-    .query(`SELECT * FROM ${table} LIMIT 10;`)
+    .query(`SELECT * FROM ${table} LIMIT 10;`, "derive_fields_from_table")
     .catch((err) => {
       console.log(err);
     });
