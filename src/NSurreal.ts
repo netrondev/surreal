@@ -131,7 +131,13 @@ export class NSurreal<G extends Record<string, object> = {}> {
         responseobj[`${uid}_query${idx + 1}`] = i;
       });
 
+      if (this.debug) {
+        console.log(responseobj);
+      }
+
       const ts = JsonToTS(responseobj, { useTypeAlias: true, rootName: uid });
+
+      this.log("Generated types", ts);
 
       this.log(
         "Creating directory if needed.",
