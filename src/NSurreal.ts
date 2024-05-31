@@ -16,7 +16,7 @@ export class NSurreal<G extends Record<string, object> = {}> {
 
   debug = false;
 
-  constructor(options?: { output_path: string; debug?: boolean }) {
+  constructor(options?: { output_path?: string; debug?: boolean }) {
     if (options?.output_path) {
       this.output_path = options.output_path;
     }
@@ -105,13 +105,15 @@ export class NSurreal<G extends Record<string, object> = {}> {
       throw new Error("uniqueID must be a valid identifier.");
     }
 
-    const stack = new Error();
+    // const stack = new Error();
 
-    if (!stack.stack) {
-      throw new Error("Could not generate unique identifier for query.");
-    }
+    // if (!stack.stack) {
+    //   throw new Error("Could not generate unique identifier for query.");
+    // }
 
     const result = await this.client.query(query);
+
+    this.log("Query result", result);
 
     if (uniqueID) {
       const uid = uniqueID as string;
@@ -121,6 +123,8 @@ export class NSurreal<G extends Record<string, object> = {}> {
         querycount -= 1;
       }
 
+      this.log(`Query count: ${querycount}`);
+
       let responseobj: Record<string, (typeof result)[number]> = {};
 
       result.forEach((i, idx) => {
@@ -129,9 +133,18 @@ export class NSurreal<G extends Record<string, object> = {}> {
 
       const ts = JsonToTS(responseobj, { useTypeAlias: true, rootName: uid });
 
-      await fs.promises.mkdir(`${this.output_path}/querytypes`, {
-        recursive: true,
-      });
+      this.log(
+        "Creating directory if needed.",
+        `${this.output_path}/querytypes`
+      );
+
+      await fs.promises
+        .mkdir(`${this.output_path}/querytypes`, {
+          recursive: true,
+        })
+        .catch((err) => {
+          this.log("Error creating directory", err);
+        });
 
       let outputtype = ts.map((i, idx) => {
         if (idx == 0) {
@@ -153,11 +166,17 @@ export class NSurreal<G extends Record<string, object> = {}> {
         return i;
       });
 
-      await fs.promises.writeFile(
-        `${this.output_path}/querytypes/${uid}.ts`,
-        `import { RecordId } from "surrealdb.js";
+      this.log("Writing to file", `${this.output_path}/querytypes/${uid}.ts`);
+
+      await fs.promises
+        .writeFile(
+          `${this.output_path}/querytypes/${uid}.ts`,
+          `import { RecordId } from "surrealdb.js";
 export ${outputtype.join("\n")}`
-      );
+        )
+        .catch((err) => {
+          this.log("Error writing to file", err);
+        });
 
       let schemas = await this.read_querytypes();
 
