@@ -1,6 +1,6 @@
 {
   "name": "@netron/surreal",
-  "version": "0.1.31",
+  "version": "0.1.32",
   "description": "type safe surrealdb",
   "main": "index.ts",
   "scripts": {
@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "hash.js": "1.1.7",
     "surrealdb.js": "1.0.0-beta.8"
   },
   "devDependencies": {

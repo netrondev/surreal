@@ -3,7 +3,6 @@ import {
   NameEntry,
   TypeStructure,
   KeyMetaData,
-  TypeObj,
 } from "./model";
 import { isHash, findTypeById, isNonArrayUnion } from "./util";
 
@@ -41,7 +40,7 @@ function removeUndefinedFromUnion(unionTypeName: string) {
 }
 
 function replaceTypeObjIdsWithNames(
-  typeObj: TypeObj,
+  typeObj: { [index: string]: string },
   names: NameEntry[]
 ): object {
   return (

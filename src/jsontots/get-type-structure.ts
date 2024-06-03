@@ -1,4 +1,5 @@
-import { TypeObj, type TypeDescription, type TypeStructure } from "./model";
+import * as hash from "hash.js";
+import { type TypeDescription, type TypeStructure } from "./model";
 import {
   isHash,
   getTypeDescriptionGroup,
@@ -11,16 +12,15 @@ import {
 } from "./util";
 import { TypeGroup } from "./model";
 import { UUID } from "surrealdb.js";
-import crypto from "crypto";
 
 function createTypeDescription(
-  typeObj: TypeObj,
+  typeObj: string[],
   isUnion: boolean
 ): TypeDescription {
   if (isArray(typeObj)) {
     return {
-      id: Hash(JSON.stringify([...(typeObj as string[]), isUnion])),
-      arrayOfTypes: typeObj as string[],
+      id: Hash(JSON.stringify([...typeObj, isUnion])),
+      arrayOfTypes: typeObj,
       isUnion,
     };
   } else {
@@ -32,7 +32,7 @@ function createTypeDescription(
 }
 
 function getIdByType(
-  typeObj: TypeObj,
+  typeObj: Record<string, unknown>,
   types: TypeDescription[],
   isUnion = false
 ): string {
@@ -49,19 +49,17 @@ function getIdByType(
 }
 
 function Hash(content: string): string {
-  return crypto.createHash("sha256").update(content).digest("hex");
-
-  // return hash.sha1().update(content).digest("hex");
+  return hash.sha1().update(content).digest("hex");
 }
 
 function typeObjectMatchesTypeDesc(
-  typeObj: TypeObj,
+  typeObj: string[],
   typeDesc: TypeDescription,
   isUnion: boolean
 ): boolean {
   if (isArray(typeObj)) {
     return (
-      arraysContainSameElements(typeObj as string[], typeDesc.arrayOfTypes) &&
+      arraysContainSameElements(typeObj, typeDesc.arrayOfTypes) &&
       typeDesc.isUnion === isUnion
     );
   } else {
@@ -87,7 +85,7 @@ function objectsHaveSameEntries(
   const sameLength = entries1.length === entries2.length;
 
   const sameTypes = entries1.every(([key, value]) => {
-    return value === obj2[key as keyof typeof obj2];
+    return value === obj2![key];
   });
 
   return sameLength && sameTypes;
@@ -119,7 +117,10 @@ function getTypeGroup(value: unknown): TypeGroup {
   }
 }
 
-function createTypeObject(obj: TypeObj, types: TypeDescription[]): TypeObj {
+function createTypeObject(
+  obj: Record<string, unknown>,
+  types: TypeDescription[]
+): Record<string, unknown> {
   return Object.entries(obj).reduce((typeObj, [key, value]) => {
     const { rootTypeId } = getTypeStructure(value, types);
 
@@ -151,7 +152,7 @@ function getMergedObjects(
       .filter((typeObj) => {
         return Object.keys(typeObj!).includes(key);
       })
-      .map((typeObj) => typeObj![key as keyof typeof typeObj])
+      .map((typeObj) => typeObj![key])
       .filter(onlyUnique);
 
     if (typesOfKey.length === 1) {
@@ -171,7 +172,7 @@ function getMergedObjects(
       ...obj,
       [keyValue]: type,
     };
-  }, {}) as TypeObj;
+  }, {});
   return getIdByType(typeObj, types, true);
 }
 
@@ -286,8 +287,6 @@ function getInnerArrayType(
     // if they are mixed or all primitive we cant merge them so we return as mixed union type
     return getMergedUnion(typesOfArray, types);
   }
-
-  throw new Error("Should not reach this point fix plz");
 }
 
 export function getTypeStructure(
@@ -308,7 +307,10 @@ export function getTypeStructure(
       };
 
     case TypeGroup.Object:
-      const typeObj = createTypeObject(targetObj as TypeObj, types);
+      const typeObj = createTypeObject(
+        targetObj as Record<string, unknown>,
+        types
+      );
       const objType = getIdByType(typeObj, types);
 
       return {

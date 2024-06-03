@@ -7,12 +7,10 @@ export enum TypeGroup {
   UUID,
 }
 
-export type TypeObj = Record<string, string> | string[];
-
 export interface TypeDescription {
   id: string;
   isUnion?: boolean;
-  typeObj?: TypeObj;
+  typeObj?: Record<string, string>;
   arrayOfTypes?: string[];
 }
 
