@@ -12,6 +12,7 @@ import {
 } from "./util";
 import { TypeGroup } from "./model";
 import { UUID } from "surrealdb.js";
+import crypto from "crypto";
 
 function createTypeDescription(
   typeObj: string[],
@@ -49,7 +50,9 @@ function getIdByType(
 }
 
 function Hash(content: string): string {
-  return hash.sha1().update(content).digest("hex");
+  return crypto.createHash("sha256").update(content).digest("hex");
+
+  // return hash.sha1().update(content).digest("hex");
 }
 
 function typeObjectMatchesTypeDesc(
