@@ -1,10 +1,11 @@
 {
   "name": "@netron/surreal",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "description": "type safe surrealdb",
   "main": "index.ts",
   "scripts": {
-    "test": "npx tsx index.ts"
+    "test": "npx tsx test.ts",
+    "publish": "npx jsr publish"
   },
   "keywords": [],
   "author": "",
