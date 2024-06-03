@@ -1,20 +1,16 @@
 {
   "name": "@netron/surreal",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "description": "type safe surrealdb",
   "main": "index.ts",
   "scripts": {
-    "test": "npx tsx test.ts",
-    "publish": "npx jsr publish"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "hash.js": "^1.1.7",
-    "json-to-zod": "^1.1.2",
-    "surrealdb.js": "1.0.0-beta.8",
-    "zod": "^3.23.8"
+    "surrealdb.js": "1.0.0-beta.8"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
