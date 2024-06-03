@@ -15,12 +15,6 @@ importers:
       '@types/node':
         specifier: ^20.12.12
         version: 20.12.12
-      dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
-      surrealdb.wasm:
-        specifier: 1.0.0-beta.11
-        version: 1.0.0-beta.11(surrealdb.js@1.0.0-beta.8)
 
 packages:
 
@@ -46,10 +40,6 @@ packages:
   decimal.js@10.4.3:
     resolution: {integrity: sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==}
 
-  dotenv@16.4.5:
-    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
-    engines: {node: '>=12'}
-
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
@@ -70,11 +60,6 @@ packages:
   surrealdb.js@1.0.0-beta.8:
     resolution: {integrity: sha512-waIeNBbTrS+dmW1WO50CCjcWkHw6L99MJDM1LrS1nxg6paYui7Kd0IM+emIjFmyjQc51rASZDTmj4mwyQTtfGA==}
     engines: {node: '>=18.0.0'}
-
-  surrealdb.wasm@1.0.0-beta.11:
-    resolution: {integrity: sha512-Rz9S99ECYJ5VA9nhfAqmDb0BmrNtGmTsPthJD8ILTFB0mO5fUrI+tX9PO11Zq/iSWdIoFyFq2+25UJZzmJMyjQ==}
-    peerDependencies:
-      surrealdb.js: ^1.0.0-beta.7
 
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
@@ -133,8 +118,6 @@ snapshots:
 
   decimal.js@10.4.3: {}
 
-  dotenv@16.4.5: {}
-
   isexe@2.0.0: {}
 
   isows@1.0.4(ws@8.17.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)):
@@ -159,11 +142,6 @@ snapshots:
     optionalDependencies:
       bufferutil: 4.0.8
       utf-8-validate: 6.0.4
-
-  surrealdb.wasm@1.0.0-beta.11(surrealdb.js@1.0.0-beta.8):
-    dependencies:
-      surrealdb.js: 1.0.0-beta.8
-      zod: 3.23.8
 
   undici-types@5.26.5: {}
 
