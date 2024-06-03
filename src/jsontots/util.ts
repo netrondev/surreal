@@ -2,7 +2,9 @@ import { RecordId } from "surrealdb.js";
 import { KeyMetaData, TypeGroup, TypeDescription } from "./model";
 
 export function isHash(str: string) {
-  return str.length === 40;
+  // sha 1 is 40.
+  // sha 256 hash is 64 characters long
+  return str.length === 64;
 }
 
 export function onlyUnique<G>(value: G, index: number, self: G[]) {
