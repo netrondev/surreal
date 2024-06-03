@@ -1,22 +1,26 @@
-import { ConnectionOptions, Surreal } from "surrealdb.js";
-import { generate_unique_hash_repeatably } from "./hash";
-import jsonToZod from "json-to-zod";
+import { type ConnectionOptions, Surreal } from "surrealdb.js";
 import fs from "fs";
 import JsonToTS from "./jsontots";
 
 /** TypeSafe SurrealDB Client https://jsr.io/@netron/surreal based on surrealdb.js
  * See https://surrealdb.com/docs/surrealdb/integration/sdks/javascript */
-export class NSurreal<G extends Record<string, object> = {}> {
+export class NSurreal<G extends Record<string, object>> {
   client: Surreal;
   timer: NodeJS.Timeout;
   timestamp_connected: Date | undefined;
   url: string | undefined;
   opts: ConnectionOptions | undefined;
-  output_path: string = "./src/generated";
+  output_path = "./src/generated";
 
   debug = false;
 
-  constructor(options?: { output_path?: string; debug?: boolean }) {
+  skip_write = false;
+
+  constructor(options?: {
+    output_path?: string;
+    debug?: boolean;
+    skip_write?: boolean;
+  }) {
     if (options?.output_path) {
       this.output_path = options.output_path;
     }
@@ -25,15 +29,19 @@ export class NSurreal<G extends Record<string, object> = {}> {
       this.debug = options.debug;
     }
 
+    if (options?.skip_write) {
+      this.skip_write = options.skip_write;
+    }
+
     this.client = new Surreal();
     this.timer = setInterval(() => {
       if (!this.timestamp_connected) return;
-      const diff = new Date().getTime() - this.timestamp_connected!.getTime();
+      const diff = new Date().getTime() - this.timestamp_connected.getTime();
       if (diff > 1000 * 60) {
         if (this.client) {
-          this.client.close();
+          this.client.close().catch(console.error);
         }
-        this.connect(this.url!, this.opts!);
+        this.connect(this.url!, this.opts).catch(console.error);
       }
     }, 10000);
   }
@@ -42,7 +50,7 @@ export class NSurreal<G extends Record<string, object> = {}> {
    * https://surrealdb.com/docs/surrealdb/integration/sdks/javascript#connect
    */
 
-  log(...input: any[]) {
+  log(...input: Parameters<typeof console.log>) {
     if (this.debug) console.log(`NSurreal -`, input);
   }
 
@@ -97,7 +105,7 @@ export class NSurreal<G extends Record<string, object> = {}> {
     const uid = uniqueID as string;
 
     // ensure uniqueId starts with capital.
-    if (uid[0] != uid[0].toUpperCase()) {
+    if (!uid.startsWith(uid.at(0)?.toUpperCase() ?? "")) {
       throw new Error("uniqueID must start with a capital letter.");
     }
 
@@ -115,7 +123,7 @@ export class NSurreal<G extends Record<string, object> = {}> {
 
     this.log("Query result", result);
 
-    if (uniqueID) {
+    if (uniqueID && !this.skip_write) {
       const uid = uniqueID as string;
 
       let querycount = query.split(";").length;
@@ -125,7 +133,7 @@ export class NSurreal<G extends Record<string, object> = {}> {
 
       this.log(`Query count: ${querycount}`);
 
-      let responseobj: Record<string, (typeof result)[number]> = {};
+      const responseobj: Record<string, (typeof result)[number]> = {};
 
       result.forEach((i, idx) => {
         responseobj[`${uid}_query${idx + 1}`] = i;
@@ -152,7 +160,7 @@ export class NSurreal<G extends Record<string, object> = {}> {
           this.log("Error creating directory", err);
         });
 
-      let outputtype = ts.map((i, idx) => {
+      const outputtype = ts.map((i, idx) => {
         if (idx == 0) {
           let output = i.split("\n").at(0)?.replace("{", "[");
           output += "\n";
@@ -160,7 +168,7 @@ export class NSurreal<G extends Record<string, object> = {}> {
           output += i
             .split("\n")
             .slice(1, -1)
-            .map((x) => x.split(":")[1].slice(0, -1))
+            .map((x) => x.split(":").at(1)?.slice(0, -1))
             .join(",\n");
 
           output += "\n";
@@ -177,29 +185,28 @@ export class NSurreal<G extends Record<string, object> = {}> {
       await fs.promises
         .writeFile(
           `${this.output_path}/querytypes/${uid}.ts`,
-          `import { RecordId } from "surrealdb.js";
+          `import type { UUID, RecordId } from "surrealdb.js";
 export ${outputtype.join("\n")}`
         )
         .catch((err) => {
           this.log("Error writing to file", err);
         });
 
-      let schemas = await this.read_querytypes();
+      const schemas = await this.read_querytypes();
 
       await fs.promises.writeFile(
         `${this.output_path}/combined.ts`,
-        `import { z } from "zod";\n
-${schemas
-  .map((i) => {
-    return `import { ${i.replace(".ts", "")} } from "./querytypes/${i.replace(
-      ".ts",
-      ""
-    )}";`;
-  })
-  .join("\n")}
+        `${schemas
+          .map((i) => {
+            return `import type { ${i.replace(
+              ".ts",
+              ""
+            )} } from "./querytypes/${i.replace(".ts", "")}";`;
+          })
+          .join("\n")}
       
 export type Queries = {\n${schemas
-          .map((i) => `  "${i.replace(".ts", "")}": ${i.replace(".ts", "")}`)
+          .map((i) => `  ${i.replace(".ts", "")}: ${i.replace(".ts", "")};`)
           .join("\n")}\n}`
       );
     }

@@ -1,13 +1,15 @@
 import { getTypeStructure, optimizeTypeStructure } from "./get-type-structure";
-import { Options } from "./model";
+import { type Options } from "./model";
 import {
   getInterfaceDescriptions,
   getInterfaceStringFromDescription,
 } from "./get-interfaces";
 import { getNames } from "./get-names";
-import { isArray, isObject } from "./util";
 
-export default function JsonToTS(json: any, userOptions?: Options): string[] {
+export default function JsonToTS(
+  json: unknown,
+  userOptions?: Options
+): string[] {
   const defaultOptions: Options = {
     rootName: "RootObject",
   };

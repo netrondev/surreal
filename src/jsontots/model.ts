@@ -4,12 +4,13 @@ export enum TypeGroup {
   Object,
   Date,
   RecordId,
+  UUID,
 }
 
 export interface TypeDescription {
   id: string;
   isUnion?: boolean;
-  typeObj?: { [index: string]: string };
+  typeObj?: Record<string, string>;
   arrayOfTypes?: string[];
 }
 

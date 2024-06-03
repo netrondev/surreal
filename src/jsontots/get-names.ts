@@ -1,11 +1,11 @@
 // import * as pluralize from "pluralize";
 
 import {
-  TypeStructure,
-  NameEntry,
-  NameStructure,
+  type TypeStructure,
+  type NameEntry,
+  type NameStructure,
   TypeGroup,
-  TypeDescription,
+  type TypeDescription,
 } from "./model";
 import {
   getTypeDescriptionGroup,
@@ -71,7 +71,7 @@ function getName(
 
 export function getNames(
   typeStructure: TypeStructure,
-  rootName: string = "RootObject"
+  rootName = "RootObject"
 ): NameEntry[] {
   return getName(typeStructure, rootName, [], false).names.reverse();
 }
@@ -83,7 +83,7 @@ function getNameById(
   types: TypeDescription[],
   nameMap: NameEntry[]
 ): string {
-  let nameEntry = nameMap.find((_) => _.id === id);
+  const nameEntry = nameMap.find((_) => _.id === id);
 
   if (nameEntry) {
     return nameEntry.name;
@@ -109,7 +109,6 @@ function getNameById(
         .map((key) => parseKeyMetaData(key).keyValue)
         // .map((name) => (isInsideArray ? pluralize.singular(name) : name))
         .map(pascalCase)
-        // @ts-ignore
         .map(normalizeInvalidTypeName)
         .map(pascalCase) // needed because removed symbols might leave first character uncapitalized
         .map((name) =>
@@ -122,7 +121,7 @@ function getNameById(
       break;
   }
 
-  nameMap.push({ id, name: name as string });
+  nameMap.push({ id, name: String(name) });
 
   if (!name) {
     throw new Error("could not getNameById");
@@ -147,11 +146,11 @@ function capitalize(name: string) {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
-function normalizeInvalidTypeName(name: string): string {
-  if (/^[a-zA-Z][a-zA-Z0-9]*$/.test(name)) {
-    return name;
+function normalizeInvalidTypeName(name: string | null): string {
+  if (/^[a-zA-Z][a-zA-Z0-9]*$/.test(name ?? "null")) {
+    return String(name);
   } else {
-    const noSymbolsName = name.replace(/[^a-zA-Z0-9]/g, "");
+    const noSymbolsName = String(name ?? "null").replace(/[^a-zA-Z0-9]/g, "");
     const startsWithWordCharacter = /^[a-zA-Z]/.test(noSymbolsName);
     return startsWithWordCharacter ? noSymbolsName : `_${noSymbolsName}`;
   }
@@ -176,7 +175,7 @@ function getArrayName(
     return "any";
   } else if (typeDesc.arrayOfTypes!.length === 1) {
     const [idOrPrimitive] = typeDesc.arrayOfTypes!;
-    return convertToReadableType(idOrPrimitive, types, nameMap);
+    return convertToReadableType(idOrPrimitive!, types, nameMap);
   } else {
     return unionToString(typeDesc, types, nameMap);
   }

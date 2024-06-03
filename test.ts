@@ -1,13 +1,8 @@
 import { NSurreal } from "./index";
 import { z } from "zod";
-import { schema_generate } from "./src/generateschema";
 
 // once generated, you can import the schema like this:
 import { type Queries } from "./src/generated/combined";
-import Surreal, { RecordId } from "surrealdb.js";
-import { surrealdbWasmEngines } from "surrealdb.wasm/lib/embedded";
-import { SR_info } from "./src/surreal_helpers";
-
 require("dotenv").config();
 
 async function runtest() {
@@ -34,6 +29,11 @@ async function runtest() {
 
   // await schema_generate({ db: client, fileout: "dbschema.ts" });
   // test should be typed now.
+
+  const single = await client.query(
+    `create test set name = "piet";`,
+    "CreateQuery"
+  );
 
   const res = await client.query(
     "select *, (select * from vehicle) as vehicles from user; select * from vehicle; info for db;",
