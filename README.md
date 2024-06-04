@@ -64,8 +64,20 @@ async function test() {
     database: env.SURREALDB_DB,
   });
 
-  const test = await client.query("select * from user;", "selectusers");
+  const test = await client.query(
+    /* surrealql */ 
+    `select * from user;`, 
+    /* Give this query a unique type name. Must start with a Capital letter, and be a valid json key aswell. */
+    `SelectUsers`,
+    /* Optional options */
+    {
+      /** Switch to true to skip writing type updates to file. Helpful to manually override types. */
+      skip_write: false
+    }
+    );
+
   // test now has automatic types!
+  
 }
 
 test();

@@ -92,8 +92,13 @@ export class NSurreal<G extends Record<string, object>> {
   async query<Q extends keyof G>(
     query: string,
     /** we create a unique tag for this query to link the output back to the type */
-    uniqueID: Q
+    uniqueID: Q,
+    options?: {
+      /** locally overwrite skip_write for this query. Useful to disable automatic changes to types. */
+      skip_write?: boolean;
+    }
   ): Promise<G[Q]> {
+    let skip_write = options?.skip_write ?? this.skip_write;
     this.log("Querying", query, uniqueID);
     query = query.trim();
     if (!this.client) throw new Error("Client not connected");
@@ -123,7 +128,7 @@ export class NSurreal<G extends Record<string, object>> {
 
     this.log("Query result", result);
 
-    if (uniqueID && !this.skip_write) {
+    if (uniqueID && !skip_write) {
       const uid = uniqueID as string;
 
       let querycount = query.split(";").length;
