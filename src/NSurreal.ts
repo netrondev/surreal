@@ -185,7 +185,10 @@ export class NSurreal<G extends Record<string, object>> {
       await fs.promises
         .writeFile(
           `${this.output_path}/querytypes/${uid}.ts`,
-          `import type { UUID, RecordId } from "surrealdb.js";
+          `/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+          
+          import type { UUID, RecordId } from "surrealdb.js";
 export ${outputtype.join("\n")}`
         )
         .catch((err) => {
